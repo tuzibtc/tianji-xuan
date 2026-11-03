@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.part
+# 数据都在 XUAN_HOME，不进仓库
+people.json
+*.jsonl
+*.pkl

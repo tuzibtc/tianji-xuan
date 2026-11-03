@@ -1,0 +1,11 @@
+[
+ {
+  "id": "example",
+  "name": "示例人物（虚构）",
+  "gender": "female",
+  "date": "1988-03-21",
+  "clock_time": "14:30",
+  "lon": 121.47,
+  "_说明": "复制到 XUAN_HOME/people.json 后改成真实信息。date 是公历生日；clock_time 是出生钟表时间（不确定就删掉，改填 hour_index 0–11 作为暂定时辰）；lon 是出生地经度，用于真太阳时。"
+ }
+]

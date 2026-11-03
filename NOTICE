@@ -1,0 +1,22 @@
+tianji-xuan — 第三方组件与数据来源
+
+1. 排盘引擎：ziwei-doushu（MIT License，Copyright (c) 2026 紫微研究）
+   https://github.com/Renhuai123/ziwei-doushu
+   本仓库不包含引擎代码；`xuan setup` 在安装时克隆上游仓库的固定 commit（见 engine.lock），不做任何修改。
+   引擎依赖 iztro（MIT License，Copyright (c) 2023 All Contributors）、lunar-javascript（MIT License）。
+
+2. 解读数据集（CC BY 4.0，https://creativecommons.org/licenses/by/4.0/）
+   本仓库不包含数据集文件；`xuan setup` 在安装时从上游 GitHub Releases 下载并校验。按数据集许可要求注明：
+
+     本项目使用了 紫微斗数开源解读数据集 v4.0（674,976 张命盘 × 13 维）
+     来源：https://github.com/Renhuai123/ziwei-doushu
+     作者：王多鱼AI
+
+   数据集正文中引用的倪海厦《天纪》原话不在 CC BY 4.0 授权范围内，著作权归原权利人。
+   本项目在公开模式下显示解读时会过滤这类引文与出处，只保留论断本身。
+
+3. 《周易》卦辞、爻辞、大象（xuan/bugua/hexagrams.json）：古籍原文，属公有领域。
+   hexagrams.json 中的 summary 三项取自上游引擎 lib/nihai/tianji.ts 的静态摘要（MIT）。
+
+4. 体系：本项目的方法依据倪海厦《天纪》体系，规则表与方法说明均为本项目用自己的话整理，
+   不包含《天纪》原文、讲义或视频文字稿。

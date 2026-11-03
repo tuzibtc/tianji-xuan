@@ -1,0 +1,5 @@
+# 上游排盘引擎（MIT）。xuan setup 会克隆这个仓库并检出固定 commit；不 fork、不改动。
+url=https://github.com/Renhuai123/ziwei-doushu.git
+commit=495b79ecb3524b20b2edc026067d7d0b0f407319
+# 13 维解读数据集 v4.0（CC BY 4.0），从上游 GitHub Releases 下载并校验 SHA256
+dataset_base=https://github.com/Renhuai123/ziwei-doushu/releases/download/v4.0-13d

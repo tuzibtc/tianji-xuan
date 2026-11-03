@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# 统一入口：xuan <命令> …   （Python 解释器可用 XUAN_PYTHON 指定，需要装好 requirements.txt）
+DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+exec "${XUAN_PYTHON:-python3}" "$DIR/xuan/xuan.py" "$@"
