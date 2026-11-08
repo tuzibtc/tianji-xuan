@@ -14,14 +14,30 @@ Requires git, Node.js ≥ 18 and Python ≥ 3.9.
 
 ```bash
 git clone https://github.com/tuzibtc/tianji-xuan.git tianji-xuan && cd tianji-xuan
-python3 -m pip install -r requirements.txt
+bin/xuan info             # first run creates the Python env in xuan-venv/ automatically
 bin/xuan setup            # clones the pinned upstream engine, runs npm ci, downloads and verifies the dataset (~155 MB)
-bin/xuan info             # shows install status
 ```
 
 All data lives in `XUAN_HOME` (default `~/.local/share/tianji-xuan`): the engine, dataset, models, people file, logs and calibration state. The repository itself contains no data.
 
 Optional: `bin/xuan train` trains the rebuilt reading model from the local dataset, for natal readings of people born before 1950 or after 2026 (a full run needs about 15 GB of RAM and several hours; see `xuan train -h` for a small trial run).
+
+## Python environment and auto-rebuild
+
+`bin/xuan` runs in a local env at `xuan-venv/` (override with `XUAN_VENV`). The name is deliberate: some hosting platforms skip directories named `.venv`, `venv`, `node_modules`, `build`, `dist`, `out`, `target` or `.cache` when they save and restore a workspace, so an env under those names can silently vanish.
+
+Before every run `xuan` checks the env against the pinned versions in `requirements-lock.txt`. If it is missing or broken it rebuilds it with `scripts/rebuild_env.sh` and logs what it did to `$XUAN_HOME/env-rebuild.log`. Manual: `scripts/rebuild_env.sh [--check|--force]`. Set `XUAN_PYTHON` to use your own interpreter and skip the check. The upstream engine's `node_modules` lives under `XUAN_HOME`; if it disappears, run `bin/xuan setup` again.
+
+## Backing up your own data
+
+`scripts/backup_to_github.py` is a template for backing up your own data (by default `XUAN_HOME`) to **your own private** GitHub repo, using the `gh` CLI:
+
+```bash
+scripts/backup_to_github.py --repo <you>/<private-repo> --dry-run   # scan only, show what would be skipped
+scripts/backup_to_github.py --repo <you>/<private-repo> --create    # create as private if missing, then push
+```
+
+It refuses if the repo is not private, never pushes to this code repo or the upstream engine repo, skips credential-like filenames and token/key-like contents, skips files over 50 MB (`--max-mb`) and environment/cache dirs, and writes `BACKUP_MANIFEST.json` listing every skipped item and why. It never deletes your source files. Add `--src PATH` (repeatable) for other folders.
 
 ## Usage
 
@@ -71,14 +87,30 @@ Each method (divination, feng shui, physiognomy, character divination, luck peri
 
 ```bash
 git clone https://github.com/tuzibtc/tianji-xuan.git tianji-xuan && cd tianji-xuan
-python3 -m pip install -r requirements.txt
+bin/xuan info             # 第一次运行会自动在 xuan-venv/ 建好 Python 环境
 bin/xuan setup            # 克隆固定版本的上游引擎 + npm ci + 下载并校验解读数据集（约 155 MB）
-bin/xuan info             # 查看安装状态
 ```
 
 数据都放在 `XUAN_HOME`（默认 `~/.local/share/tianji-xuan`）：引擎、数据集、模型、人物库、日志、校准状态。仓库本身不含任何数据。
 
 可选：`bin/xuan train` 用本机数据集训练自建论断库，给 1950 年前或 2027 年后出生的人做本命解读（全量需要约 15 GB 内存、数小时；可先用小参数试跑，见 `xuan train -h`）。
+
+### Python 环境与自动重建
+
+`bin/xuan` 使用本地环境 `xuan-venv/`（可用 `XUAN_VENV` 改位置）。特意不用 `.venv`、`venv`、`node_modules`、`build`、`dist`、`out`、`target`、`.cache` 这些名字：有些托管平台保存和恢复工作区时会按名字跳过它们，环境会悄悄消失。
+
+每次运行前 `xuan` 会按 `requirements-lock.txt` 里锁定的版本自检；缺失或损坏就用 `scripts/rebuild_env.sh` 自动重建，并把过程记到 `$XUAN_HOME/env-rebuild.log`。手动：`scripts/rebuild_env.sh [--check|--force]`。设了 `XUAN_PYTHON` 则直接用你指定的解释器、不自检。上游引擎的 `node_modules` 在 `XUAN_HOME` 里，丢了重跑一次 `bin/xuan setup` 即可。
+
+### 备份自己的数据
+
+`scripts/backup_to_github.py` 是一个备份模板，用 `gh` 把你自己的数据（默认 `XUAN_HOME`）备份到**你自己的私有** GitHub 库：
+
+```bash
+scripts/backup_to_github.py --repo <你>/<私有库> --dry-run   # 只扫描，列出会跳过什么
+scripts/backup_to_github.py --repo <你>/<私有库> --create    # 不存在就建成私有库，然后推送
+```
+
+目标库不是私有就拒绝；绝不推到本代码库或上游引擎库；跳过像凭据的文件名和像令牌/密钥的内容；跳过超过 50 MB 的文件（`--max-mb`）和环境/缓存目录，并写出 `BACKUP_MANIFEST.json` 说明每个跳过项及原因。不会删除任何源文件。其他目录用 `--src 路径`（可重复）。
 
 ### 用法
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 冒烟测试：在一个干净的临时 XUAN_HOME 里跑一遍主要命令（用虚构人物）。需要网络（setup 会下载引擎和数据集）。
+# 冒烟测试（离线测试见 tests/env_and_backup.sh）：在一个干净的临时 XUAN_HOME 里跑一遍主要命令（用虚构人物）。需要网络（setup 会下载引擎和数据集）。
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; X="$ROOT/bin/xuan"
 export XUAN_HOME="${XUAN_HOME:-$(mktemp -d)}"
