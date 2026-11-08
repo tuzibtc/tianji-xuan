@@ -5,3 +5,6 @@ __pycache__/
 people.json
 *.jsonl
 *.pkl
+
+# local Python env (see scripts/rebuild_env.sh)
+xuan-venv/

@@ -1,0 +1,4 @@
+# Pinned versions used by scripts/rebuild_env.sh (tested on Python 3.13).
+# requirements.txt keeps the loose minimums for manual installs.
+zstandard==0.25.0
+numpy==2.5.4

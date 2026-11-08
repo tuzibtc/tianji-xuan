@@ -1,4 +1,19 @@
 #!/usr/bin/env bash
-# 统一入口：xuan <命令> …   （Python 解释器可用 XUAN_PYTHON 指定，需要装好 requirements.txt）
+# 统一入口 / entry point: xuan <command> …
+# - XUAN_PYTHON set: use that interpreter as-is (no self-check).
+# - Otherwise use the env in xuan-venv (or XUAN_VENV); if it is missing or broken,
+#   rebuild it with scripts/rebuild_env.sh and log to $XUAN_HOME/env-rebuild.log.
+set -euo pipefail
 DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
-exec "${XUAN_PYTHON:-python3}" "$DIR/xuan/xuan.py" "$@"
+if [[ -n "${XUAN_PYTHON:-}" ]]; then exec "$XUAN_PYTHON" "$DIR/xuan/xuan.py" "$@"; fi
+VENV="${XUAN_VENV:-$DIR/xuan-venv}"
+if ! XUAN_VENV="$VENV" bash "$DIR/scripts/rebuild_env.sh" --check >/dev/null 2>&1; then
+  LOGDIR="${XUAN_HOME:-$HOME/.local/share/tianji-xuan}"; mkdir -p "$LOGDIR"
+  LOG="$LOGDIR/env-rebuild.log"
+  echo "xuan: Python env missing or broken, rebuilding at $VENV (log: $LOG)" >&2
+  if ! XUAN_VENV="$VENV" bash "$DIR/scripts/rebuild_env.sh" >>"$LOG" 2>&1; then
+    echo "xuan: env rebuild failed, see $LOG / 环境重建失败，请查看日志" >&2; exit 1
+  fi
+  echo "xuan: env rebuilt OK" >&2
+fi
+exec "$VENV/bin/python" "$DIR/xuan/xuan.py" "$@"
